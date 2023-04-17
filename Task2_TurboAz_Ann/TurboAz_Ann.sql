@@ -43,6 +43,10 @@ CREATE TABLE MarketType(
  Id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 [Name] NVARCHAR(30));
 
+CREATE TABLE SeatQuantity(
+ Id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+[Name] NVARCHAR(30));
+
 CREATE TABLE Cities(
  Id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 [Name] NVARCHAR(30));
@@ -82,7 +86,8 @@ CREATE TABLE Announces(
  AdditionalInfo NVARCHAR(255),
  ModelTypeId INT REFERENCES Models(Id),
  ContactId INT REFERENCES Contacts(Id),
- HorsePower INT
+ HorsePower INT,
+ SeatQuantityId INT REFERENCES SeatQuantity(Id)
 );
 
 CREATE TABLE VehicleCondition(
