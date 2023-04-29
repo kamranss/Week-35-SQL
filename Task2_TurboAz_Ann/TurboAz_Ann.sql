@@ -121,5 +121,22 @@ CREATE TABLE VehicleCondition(
  );
 
 
-
+ SELECT * FROM Announces 
+JOIN BanTypes ON Announces.BanTypeId = BanTypes.Id 
+JOIN ColorTypes ON Announces.ColorId = ColorTypes.Id 
+JOIN UnitofMeasurement ON Announces.YurusTypeId = UnitofMeasurement.Id 
+JOIN [OwnerShip] ON Announces.OwnerShipId = [OwnerShip].Id 
+JOIN FuelTypes ON Announces.FuelTypeId = FuelTypes.Id 
+JOIN GearBoxTypes ON Announces.GearBoxTypeId = GearBoxTypes.Id 
+JOIN WheelDriveSystem ON Announces.OturucuTypeId = WheelDriveSystem.Id 
+JOIN CurrencyType ON Announces.CurrencyTypeId = CurrencyType.Id 
+JOIN EngineSizeType ON Announces.EngineSizeId = EngineSizeType.Id 
+JOIN MarketType ON Announces.MarketTypeId = MarketType.Id 
+JOIN SeatQuantities ON Announces.SeatQuantityId = SeatQuantities.Id 
+JOIN Models ON Announces.ModelTypeId = Models.Id 
+JOIN Contacts ON Announces.Id = Contacts.AnnounceId 
+JOIN Cities ON Contacts.CityId = Cities.Id 
+JOIN VehicleCondition ON Announces.Id = VehicleCondition.AnnouncementId 
+JOIN FactoryFunctions ON Announces.Id = FactoryFunctions.AnnouncementId 
+WHERE Announces.Id = [ID of the announce you want to display];
 
