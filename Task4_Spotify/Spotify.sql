@@ -1,12 +1,13 @@
 Create Database Spotify
 
 
-Use Database Spotify
+Use  Spotify
+
 
 CREATE TABLE Music (
   Id INT NOT NULL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  duration TIME NOT NULL,
+  duration INT NOT NULL,
   viewCount INT NOT NULL,
   releasedYear INT NOT NULL
 );
@@ -14,8 +15,8 @@ CREATE TABLE Music (
 CREATE TABLE Albums (
   Id INT NOT NULL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  duration TIME NOT NULL,
-  releasedYear INT NOT NULL
+  duration INT NOT NULL,
+  releasedYear CHAR(4) NOT NULL
 );
 
 CREATE TABLE Album_Music (
@@ -30,7 +31,6 @@ CREATE TABLE Album_Music (
 CREATE TABLE Artists (
   Id INT NOT NULL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  dateOfBirth DATE NOT NULL,
   musicGenre VARCHAR(255) NOT NULL
 );
 
@@ -45,10 +45,10 @@ CREATE TABLE Artists_albums (
 
 CREATE TABLE Users (
   Id INT NOT NULL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  surname VARCHAR(255) NOT NULL,
-  dateOfBirth DATE NOT NULL,
-  email VARCHAR(255) NOT NULL
+  name VARCHAR(40) NOT NULL,
+  surname VARCHAR(40) NOT NULL,
+  dateOfBirth DATE,
+  email VARCHAR(255) 
 );
 
 CREATE TABLE LikedMusics (
@@ -58,3 +58,44 @@ CREATE TABLE LikedMusics (
   FOREIGN KEY (musicId) REFERENCES Music(Id),
   FOREIGN KEY (UserId) REFERENCES Users(Id)
 );
+
+
+
+
+SELECT m.name AS music_name, m.duration, a.name AS artist_name, al.name AS album_name
+FROM Music m
+INNER JOIN Album_Music am ON m.Id = am.MusicId
+INNER JOIN Albums al ON am.AlbumId = al.Id
+INNER JOIN Artists_albums aa ON al.Id = aa.AlbumId
+INNER JOIN Artists a ON aa.ArtistId = a.Id;
+
+
+-- Creation MusicDetailed view
+CREATE VIEW MusicDetails AS
+SELECT m.name AS music_name, m.duration, a.name AS artist_name, al.name AS album_name
+FROM Music m
+INNER JOIN Album_Music am ON m.Id = am.MusicId
+INNER JOIN Albums al ON am.AlbumId = al.Id
+INNER JOIN Artists_albums aa ON al.Id = aa.AlbumId
+INNER JOIN Artists a ON aa.ArtistId = a.Id;
+
+
+CREATE VIEW AlbumDetails AS
+SELECT al.Id, al.name AS album_name, COUNT(am.MusicId) AS num_songs
+FROM Albums al
+INNER JOIN Album_Music am ON al.Id = am.AlbumId
+GROUP BY al.Id, al.name;
+
+
+CREATE PROCEDURE GetPopularMusicFromAlbum
+  @viewCount INT,
+  @album_name VARCHAR(255)
+AS
+BEGIN
+  SELECT al.name AS album_name, m.name AS music_name, m.viewCount
+  FROM Music m
+  INNER JOIN Album_Music am ON m.Id = am.MusicId
+  INNER JOIN Albums al ON am.AlbumId = al.Id
+  WHERE al.name = @album_name AND m.viewCount > @viewCount
+  ORDER BY m.viewCount DESC;
+END;
